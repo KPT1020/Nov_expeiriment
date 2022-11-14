@@ -33,6 +33,58 @@ int VDAC = 0;
 // empty for other platforms. Be careful - other platforms may have
 // other requirements.
 
+
+void increase_offset(int a){
+  VDAC = VDAC + a;
+  dacWrite(26,VDAC);
+}
+
+void decrease_offset(int b){
+  VDAC = VDAC - b;
+  dacWrite(26,VDAC);
+}
+
+void heat_sensor(int c){
+  dacWrite(25, c);
+}
+
+void signal_gain_one(){
+  ads.setGain(GAIN_ONE);
+}
+
+void signal_gain_eight(){
+  ads.setGain(GAIN_EIGHT);
+}
+
+void signal_gain_sixteen(){
+  ads.setGain(GAIN_SIXTEEN);
+}
+
+// void test_pwm_on(int d){
+//   ledcWrite(d, 200);
+// }
+
+// void test_pwm_off(int e){
+//   ledcWrite(e,0);
+// }
+
+void read_data(){
+  adc0 = ads.readADC_SingleEnded(0);
+  adc1 = ads.readADC_SingleEnded(1);
+  adc2 = ads.readADC_SingleEnded(2);
+  adc3 = ads.readADC_SingleEnded(3);
+  
+  printf("%d,%d,%d,%d\n", adc0,adc1,adc2,adc3);
+  // Serial.print(adc0); 
+  // Serial.print(",");
+  // Serial.print(adc1);
+  // Serial.print(","); 
+  // Serial.print(adc2); 
+  // Serial.print(",");
+  // Serial.println(adc3); 
+
+}
+
 void setup(void)
 {
 
@@ -77,139 +129,93 @@ void setup(void)
     while (1);
   }
 
+  heat_sensor(255);
 
 
 }
 
-void increase_offset(int a){
-  VDAC = VDAC + a;
-  dacWrite(26,VDAC);
-}
 
-void decrease_offset(int b){
-  VDAC = VDAC - b;
-  dacWrite(26,VDAC);
-}
-
-void heat_sensor(int c){
-  dacWrite(25, c);
-}
-
-void signal_gain_one(){
-  ads.setGain(GAIN_ONE);
-}
-
-void signal_gain_eight(){
-  ads.setGain(GAIN_EIGHT);
-}
-
-void signal_gain_sixteen(){
-  ads.setGain(GAIN_SIXTEEN);
-}
-
-// void test_pwm_on(int d){
-//   ledcWrite(d, 200);
-// }
-
-// void test_pwm_off(int e){
-//   ledcWrite(e,0);
-// }
-
-void read_data(){
-  adc0 = ads.readADC_SingleEnded(0);
-  adc1 = ads.readADC_SingleEnded(1);
-  adc2 = ads.readADC_SingleEnded(2);
-  adc3 = ads.readADC_SingleEnded(3);
-  
-  Serial.print(sht20.humidity());
-  Serial.print(",");
-  Serial.print(VDAC);
-  Serial.print(",");
-  Serial.print(adc0); 
-  Serial.print(",");
-  Serial.print(adc1);
-  Serial.print(","); 
-  Serial.print(adc2); 
-  Serial.print(",");
-  Serial.println(adc3); 
-
-
-}
-
+long a;
 void loop(void)
 {
-  if(Serial.available()){
-    command = Serial.readStringUntil('\n');
+    // if(Serial.available()){
+    //   command = Serial.readStringUntil('\n');
 
-    if(command.equals("IO")){
-      increase_offset(1);
-    }
-    if(command.equals("IO5")){
-      increase_offset(5);
-    }
-    if(command.equals("DO")){
-    decrease_offset(1);
-    }
-    if(command.equals("DO5")){
-      decrease_offset(5);
-    }
-    if(command.equals("HS255")){
-      heat_sensor(255);
-    }
-    if(command.equals("HS240")){
-      heat_sensor(240);
-    }
-    if(command.equals("HS")){
-      heat_sensor(220);
-    }
-    if(command.equals("NS")){
-      heat_sensor(200);
-    }
-    if(command.equals("OS")){
-      heat_sensor(0);
-    }    
-    if(command.equals("LS")){
-      heat_sensor(180);
-    }
-    if(command.equals("VS")){
-      heat_sensor(50);
-    }           
-    if(command.equals("SG1")){
-      signal_gain_one();
-    }
-    if(command.equals("SG8")){
-      signal_gain_eight();
-    }    
-    if(command.equals("SG16")){
-      signal_gain_sixteen();
-    }
-    // if(command.equals("pump_on")){
-    //   test_pwm_on(0);
-    // }
-    // if(command.equals("pump_off")){
-    //   test_pwm_off(0);
-    // }
-    // if(command.equals("col_on")){
-    //   test_pwm_on(2);
-    // }
-    // if(command.equals("col_off")){
-    //   test_pwm_off(2);
-    // }
-    // if(command.equals("sol_on")){
-    //   test_pwm_on(1);
-    // }
-    // if(command.equals("col_off")){
-    //   test_pwm_off(1);
-    // }
+    //   if(command.equals("IO")){
+    //     increase_offset(1);
+    //   }
+    //   if(command.equals("IO5")){
+    //     increase_offset(5);
+    //   }
+    //   if(command.equals("DO")){
+    //   decrease_offset(1);
+    //   }
+    //   if(command.equals("DO5")){
+    //     decrease_offset(5);
+    //   }
+    //   if(command.equals("HS255")){
+    //     heat_sensor(255);
+    //   }
+    //   if(command.equals("HS240")){
+    //     heat_sensor(240);
+    //   }
+    //   if(command.equals("HS")){
+    //     heat_sensor(220);
+    //   }
+    //   if(command.equals("NS")){
+    //     heat_sensor(200);
+    //   }
+    //   if(command.equals("OS")){
+    //     heat_sensor(0);
+    //   }    
+    //   if(command.equals("LS")){
+    //     heat_sensor(180);
+    //   }
+    //   if(command.equals("VS")){
+    //     heat_sensor(50);
+    //   }           
+    //   if(command.equals("SG1")){
+    //     signal_gain_one();
+    //   }
+    //   if(command.equals("SG8")){
+    //     signal_gain_eight();
+    //   }    
+    //   if(command.equals("SG16")){
+    //     signal_gain_sixteen();
+    //   }
+    //   // if(command.equals("pump_on")){
+    //   //   test_pwm_on(0);
+    //   // }
+    //   // if(command.equals("pump_off")){
+    //   //   test_pwm_off(0);
+    //   // }
+    //   // if(command.equals("col_on")){
+    //   //   test_pwm_on(2);
+    //   // }
+    //   // if(command.equals("col_off")){
+    //   //   test_pwm_off(2);
+    //   // }
+    //   // if(command.equals("sol_on")){
+    //   //   test_pwm_on(1);
+    //   // }
+    //   // if(command.equals("col_off")){
+    //   //   test_pwm_off(1);
+    //   // }
 
 
-    // else{
-    //   Serial.println("Invalid command");
-    // read_data();
+    //   // else{
+    //   //   Serial.println("Invalid command");
+    //   // read_data();
+    //   // }
     // }
+
+  if(millis()-a >1){
+  // printf("%d\n",a);
+   a = millis();
+   read_data();
+ 
+  // printf("%d\n",a);
   }
-
-  read_data();
   
   // volts0 = ads.computeVolts(adc0);
   // volts1 = ads.computeVolts(adc1);
